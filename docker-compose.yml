@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  web:
+    container_name: nukeviet_apache
+    build:
+      context: ./_docker/apache
+      dockerfile: Dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - ./src:/var/www/html
+      - ./_docker/apache/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - db
+  db:
+    container_name: nukeviet_db
+    image: mariadb:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./_docker/mysql/data:/var/lib/mysql
+      - ./_docker/mysql/conf/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - 9906:3306
+  phpmyadmin:
+    container_name: nukeviet_admin
+    image: phpmyadmin:latest
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
