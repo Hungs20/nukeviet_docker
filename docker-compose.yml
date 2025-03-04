@@ -1,37 +1,57 @@
-version: '3.8'
 services:
-  web:
-    container_name: nukeviet_apache
-    build:
-      context: ./_docker/apache
-      dockerfile: Dockerfile
-    ports:
-      - ${WEB_PORT:-8000}:80
-    volumes:
-      - ./src:/var/www/html
-      - ./_docker/apache/php.ini:/usr/local/etc/php/php.ini
-    depends_on:
-      - db
   db:
     container_name: nukeviet_db
-    image: mariadb:latest
-    restart: unless-stopped
+    hostname: db
+    image: mariadb:11.4
+    volumes:
+      - ./conf/mysql/conf/my.cnf:/etc/mysql/conf.d/nukeviet.cnf
+      - ./conf/mysql/data:/var/lib/mysql
+      #- ./db:/home
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - ./_docker/mysql/data:/var/lib/mysql
-      - ./_docker/mysql/conf/my.cnf:/etc/mysql/my.cnf
-    ports:
-      - ${DB_PORT:-9906}:3306
+      TZ: ${TimeZone}
+    command: >
+      bash -c " chmod 644 /etc/mysql/conf.d/nukeviet.cnf && /usr/local/bin/docker-entrypoint.sh mariadbd "
+
   phpmyadmin:
-    container_name: nukeviet_admin
+    container_name: nukeviet_phpmyadmin
+    hostname: phpmyadmin
     image: phpmyadmin:latest
-    ports:
-      - ${PHPMYADMIN_PORT:-8080}:80
     environment:
       PMA_HOST: db
+      PMA_USER: root
+      TZ: ${TimeZone}
+    ports:
+      - ${PHPMYADMIN_PORT:-8080}:80
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nukeviet_nginx
+    image: nginx:1.27
+    volumes:
+      - ./conf/nginx:/etc/nginx/conf.d
+      - ./src:/var/www/html
+    environment:
+      TZ: ${TimeZone}
+    ports:
+      - ${WEB_PORT:-8000}:80
+      - ${WEB_PORT_SSL:-8443}:443
+    depends_on:
+      - nukeviet
+
+  nukeviet:
+    container_name: nukeviet
+    hostname: nukeviet
+    build:
+      dockerfile: Dockerfile
+      context: ./conf/php82
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      TZ: ${TimeZone}
     depends_on:
       - db

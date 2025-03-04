@@ -1,6 +1,0 @@
-FROM php:8.2-apache
-RUN apt-get update && apt-get install -y libpng-dev nano zlib1g-dev libzip-dev --no-install-recommends
-WORKDIR /var/www/html
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
-RUN docker-php-ext-install pdo_mysql gd opcache zip
-RUN a2enmod rewrite
