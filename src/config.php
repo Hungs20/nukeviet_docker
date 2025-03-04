@@ -23,12 +23,12 @@ $db_config['dbtype'] = 'mysql';
 $db_config['collation'] = 'utf8mb4_unicode_ci';
 $db_config['charset'] = 'utf8mb4';
 $db_config['persistent'] = false;
-$db_config['prefix'] = 'nv4';
+$db_config['prefix'] = 'dtd';
 
 $global_config['site_domain'] = '';
 $global_config['name_show'] = 0;
 $global_config['idsite'] = 0;
-$global_config['sitekey'] = 'fe4c32c2a158b588298d244751c2e450';// Do not change sitekey!
+$global_config['sitekey'] = 'c7e91cbf77b0e8ac667fb58181449dc3';// Do not change sitekey!
 $global_config['hashprefix'] = '{SSHA512}';
 $global_config['cached'] = 'files';
 $global_config['session_handler'] = 'files';

@@ -122,7 +122,7 @@ define('NUKEVIET_STORE_APIURL', 'https://api.nukeviet.vn/store/');
 
 // Phương pháp hỗ trợ rewrite do người dùng khai báo,
 // Nó sẽ được gán cho biến $sys_info['supports_rewrite'] nếu hệ thông không thể tự xác định
-define('NV_MY_REWRITE_SUPPORTER', '');
+define('NV_MY_REWRITE_SUPPORTER', 'nginx');
 
 //Browser Names
 define('BROWSER_OPERA', 'Opera');
