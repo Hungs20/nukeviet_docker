@@ -6,7 +6,7 @@ services:
       context: ./_docker/apache
       dockerfile: Dockerfile
     ports:
-      - 8000:80
+      - ${WEB_PORT:-8000}:80
     volumes:
       - ./src:/var/www/html
       - ./_docker/apache/php.ini:/usr/local/etc/php/php.ini
@@ -25,12 +25,12 @@ services:
       - ./_docker/mysql/data:/var/lib/mysql
       - ./_docker/mysql/conf/my.cnf:/etc/mysql/my.cnf
     ports:
-      - 9906:3306
+      - ${DB_PORT:-9906}:3306
   phpmyadmin:
     container_name: nukeviet_admin
     image: phpmyadmin:latest
     ports:
-      - 8080:80
+      - ${PHPMYADMIN_PORT:-8080}:80
     environment:
       PMA_HOST: db
     depends_on:
